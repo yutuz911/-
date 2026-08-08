@@ -1,9 +1,17 @@
 {
-  "version": 2,
+  "services": {
+    "mbti-persona-image-system": {
+      "root": ".",
+      "entrypoint": "server.js"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/index.js"
+      "destination": {
+        "type": "service",
+        "service": "mbti-persona-image-system"
+      }
     }
   ]
 }
