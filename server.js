@@ -474,7 +474,8 @@ function parseJson(text) {
 }
 
 function serveStatic(req, res) {
-  const urlPath = req.url === "/" ? "/index.html" : decodeURIComponent(req.url.split("?")[0]);
+  const pathname = req.url.split("?")[0];
+  const urlPath = pathname === "/" ? "/index.html" : decodeURIComponent(pathname);
   const safePath = path.normalize(urlPath).replace(/^(\.\.[/\\])+/, "");
   const filePath = path.join(PUBLIC_DIR, safePath);
   if (!filePath.startsWith(PUBLIC_DIR)) {
