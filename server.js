@@ -38,7 +38,7 @@ const ALLOWED_ORIGINS = new Set(
 );
 const limiter = new Map();
 
-const server = http.createServer(async (req, res) => {
+async function appHandler(req, res) {
   try {
     applySecurityHeaders(req, res);
 
@@ -93,11 +93,15 @@ const server = http.createServer(async (req, res) => {
     }
     sendJson(res, status, { error: publicErrorMessage(error) });
   }
-});
+}
 
-server.listen(PORT, HOST, () => {
-  console.log(`MBTI image2image system running at http://${HOST}:${PORT}`);
-});
+const server = http.createServer(appHandler);
+
+if (require.main === module) {
+  server.listen(PORT, HOST, () => {
+    console.log(`MBTI image2image system running at http://${HOST}:${PORT}`);
+  });
+}
 
 async function handleGenerate(req, res) {
   const ip = getClientIp(req);
@@ -768,3 +772,8 @@ function escapeXml(value) {
     "\"": "&quot;"
   }[char]));
 }
+
+module.exports = {
+  appHandler,
+  server
+};
