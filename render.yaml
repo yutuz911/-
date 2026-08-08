@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: mbti-persona-image-system
+    env: node
+    plan: starter
+    buildCommand: ""
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 3000
+      - key: IMAGE_PROVIDER
+        value: openai
+      - key: OPENAI_IMAGE_MODEL
+        value: gpt-image-2
+      - key: OPENAI_IMAGE_QUALITY
+        value: medium
+      - key: OPENAI_IMAGE_MODERATION
+        value: auto
+      - key: OPENAI_IMAGE_OUTPUT_FORMAT
+        value: png
+      - key: MOCK_GENERATION
+        value: false
+      - key: OPENAI_API_KEY
+        sync: false

@@ -1,0 +1,23 @@
+{
+  "name": "mbti-persona-image-system",
+  "version": "0.1.0",
+  "description": "An open-source MBTI persona portrait generator with privacy-first upload handling.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js && node --check src/mbti-personas.js && node --check src/prompt-audit.js && node --check src/integrations.js",
+    "smoke": "node scripts/smoke-test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "mbti",
+    "image-generation",
+    "portrait",
+    "open-source"
+  ],
+  "license": "MIT"
+}

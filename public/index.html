@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MBTI Persona Portrait</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="cover-hero" aria-label="cover preview">
+        <div class="hero-copy">
+          <span>PERSONA COVER</span>
+          <h1>MBTI Image2 主图生成</h1>
+        </div>
+        <div class="phone-wall" aria-hidden="true">
+          <div class="phone-card hot"><b>ENFP</b><span>设计人：王星</span></div>
+          <div class="phone-card pink"><b>INTJ</b><span>Persona Poster</span></div>
+          <div class="phone-card violet"><b>INFJ</b><span>Image2 Cover</span></div>
+          <div class="phone-card blue"><b>ESTP</b><span>Low Poly</span></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="MBTI persona image generator">
+        <div class="panel controls">
+          <div class="brand">
+            <span class="mark" aria-hidden="true">M</span>
+            <div>
+              <h2>MBTI Persona Cover</h2>
+              <p>上传照片，选择人格，输出照片和封面。</p>
+            </div>
+          </div>
+
+          <form id="generator-form">
+            <label class="field">
+              <span>照片</span>
+              <input id="photo" name="photo" type="file" accept="image/png,image/jpeg,image/webp" required />
+            </label>
+
+            <div class="grid-two">
+              <label class="field">
+                <span>MBTI</span>
+                <select id="mbti" name="mbti" required></select>
+              </label>
+
+              <label class="field">
+                <span>比例</span>
+                <select id="aspect-ratio" name="aspectRatio">
+                  <option value="1:1">1:1</option>
+                  <option value="2:3">2:3</option>
+                  <option value="3:2">3:2</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="field">
+              <span>署名</span>
+              <input id="designer-name" name="designerName" type="text" value="设计人：王星" maxlength="18" />
+            </label>
+
+            <fieldset class="field">
+              <legend>风格</legend>
+              <div class="segments" role="radiogroup" aria-label="style">
+                <label><input type="radio" name="style" value="lowpoly" checked /> 潮流</label>
+                <label><input type="radio" name="style" value="storybook" /> 绘本</label>
+                <label><input type="radio" name="style" value="anime" /> 动漫</label>
+                <label><input type="radio" name="style" value="editorial" /> 杂志</label>
+              </div>
+            </fieldset>
+
+            <label class="consent">
+              <input id="consent" type="checkbox" required />
+              <span>我确认照片中的人已同意被用于生成风格化头像。</span>
+            </label>
+
+            <div id="turnstile-slot"></div>
+            <button id="checkout" type="button" class="secondary" hidden>购买生成额度</button>
+            <button id="generate" type="submit">Image2 生成</button>
+            <p id="status" role="status"></p>
+          </form>
+        </div>
+
+        <div class="panel preview">
+          <div class="preview-stage">
+            <img id="input-preview" alt="上传照片预览" />
+            <img id="result-image" alt="生成结果" />
+            <canvas id="poster-canvas" width="1080" height="1350"></canvas>
+            <div id="empty-state">
+              <strong>等待生成</strong>
+              <span>结果会显示在这里</span>
+            </div>
+          </div>
+
+          <div class="persona-card">
+            <div class="result-actions">
+              <button id="download-image" type="button" class="secondary" hidden>下载生成照片</button>
+              <button id="download-poster" type="button" class="secondary" hidden>下载主图封面</button>
+            </div>
+            <details id="prompt-output" hidden>
+              <summary>输出提示词</summary>
+              <pre id="prompt-preview"></pre>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
