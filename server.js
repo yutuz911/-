@@ -773,7 +773,6 @@ function escapeXml(value) {
   }[char]));
 }
 
-module.exports = {
-  appHandler,
-  server
-};
+module.exports = appHandler;
+module.exports.appHandler = appHandler;
+module.exports.server = server;
