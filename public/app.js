@@ -1,3 +1,5 @@
+const DESIGNER_CREDIT = "设计人：王星";
+
 const form = document.querySelector("#generator-form");
 const mbtiSelect = document.querySelector("#mbti");
 const photoInput = document.querySelector("#photo");
@@ -10,7 +12,6 @@ const generateButton = document.querySelector("#generate");
 const promptPreview = document.querySelector("#prompt-preview");
 const checkoutButton = document.querySelector("#checkout");
 const turnstileSlot = document.querySelector("#turnstile-slot");
-const designerNameInput = document.querySelector("#designer-name");
 const posterCanvas = document.querySelector("#poster-canvas");
 const downloadPosterButton = document.querySelector("#download-poster");
 const downloadImageButton = document.querySelector("#download-image");
@@ -30,12 +31,14 @@ async function init() {
   const data = await personasResponse.json();
   integrations = await integrationsResponse.json();
   personas = data.personas || {};
+
   for (const type of Object.keys(personas)) {
     const option = document.createElement("option");
     option.value = type;
     option.textContent = `${type} - ${personas[type].title}`;
     mbtiSelect.appendChild(option);
   }
+
   mbtiSelect.value = "INTJ";
   setupTurnstile();
   setupCheckout();
@@ -71,7 +74,7 @@ form.addEventListener("submit", async (event) => {
       mbti: mbtiSelect.value,
       style: new FormData(form).get("style"),
       aspectRatio: document.querySelector("#aspect-ratio").value,
-      designerName: designerNameInput.value,
+      designerName: DESIGNER_CREDIT,
       consent: document.querySelector("#consent").checked,
       turnstileToken: getTurnstileToken()
     };
@@ -96,9 +99,11 @@ form.addEventListener("submit", async (event) => {
     promptOutput.hidden = false;
     emptyState.style.display = "none";
     promptPreview.textContent = data.prompt || "";
-    setStatus(data.mock ? "已生成本地模拟图。配置 gpt-image-2 后可生成真实图片。" : "Image2 生成完成。");
+
     if (data.fallback) {
       setStatus(`OpenAI 暂时无法出图：${data.warning || "额度或权限受限"}。已生成可下载封面预览，补充 API 额度后会自动输出 AI 风格图。`);
+    } else {
+      setStatus(data.mock ? "已生成本地模拟图。配置 gpt-image-2 后可生成真实图片。" : "Image2 生成完成。");
     }
   } catch (error) {
     setStatus(error.message, true);
@@ -147,8 +152,7 @@ function setupCheckout() {
 
 function getTurnstileToken() {
   if (!integrations.turnstile || !window.turnstile) return "";
-  const response = window.turnstile.getResponse();
-  return response || "";
+  return window.turnstile.getResponse() || "";
 }
 
 function resetTurnstile() {
@@ -177,63 +181,55 @@ async function renderPoster(imageDataUrl) {
   const height = posterCanvas.height;
   const img = await loadImage(imageDataUrl);
   const type = mbtiSelect.value;
-  const designer = sanitizeCredit(designerNameInput.value);
 
   const gradient = ctx.createLinearGradient(0, 0, width, height);
-  gradient.addColorStop(0, "#111832");
-  gradient.addColorStop(0.48, "#070912");
-  gradient.addColorStop(1, "#1a1140");
+  gradient.addColorStop(0, "#151b3e");
+  gradient.addColorStop(0.42, "#080914");
+  gradient.addColorStop(0.72, "#1b0730");
+  gradient.addColorStop(1, "#071d24");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 
-  drawGlow(ctx, width * 0.18, height * 0.18, 360, "rgba(255,63,209,0.35)");
-  drawGlow(ctx, width * 0.82, height * 0.74, 420, "rgba(40,231,255,0.24)");
+  ctx.fillStyle = "rgba(255,255,255,0.06)";
+  for (let x = 0; x < width; x += 54) ctx.fillRect(x, 0, 2, height);
+  for (let y = 0; y < height; y += 54) ctx.fillRect(0, y, width, 2);
 
-  ctx.strokeStyle = "rgba(255,255,255,0.08)";
-  ctx.lineWidth = 2;
-  for (let x = 0; x < width; x += 54) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, height);
-    ctx.stroke();
-  }
-  for (let y = 0; y < height; y += 54) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y);
-    ctx.stroke();
-  }
+  drawGlow(ctx, width * 0.22, height * 0.16, 360, "rgba(255,59,212,0.36)");
+  drawGlow(ctx, width * 0.78, height * 0.78, 420, "rgba(36,231,255,0.25)");
 
-  ctx.font = "900 54px Arial";
+  ctx.font = "900 66px Arial";
   ctx.strokeStyle = "rgba(255,255,255,0.28)";
   ctx.lineWidth = 2;
-  ctx.strokeText("MBTI PERSONA", 72, 118);
+  ctx.strokeText("MBTI CARTOON", 72, 120);
 
   ctx.fillStyle = "#ffffff";
-  ctx.font = "900 118px Arial";
-  ctx.fillText(type, 72, 230);
+  ctx.font = "900 142px Arial";
+  ctx.fillText(type, 72, 260);
 
   ctx.fillStyle = "#c8ff00";
-  ctx.font = "900 46px Arial";
-  ctx.fillText("IMAGE2 COVER", 72, 292);
+  ctx.font = "900 42px Arial";
+  ctx.fillText("IMAGE2 PERSONA POSTER", 78, 320);
 
-  const imageBox = { x: 92, y: 350, w: 896, h: 760 };
-  roundRect(ctx, imageBox.x - 18, imageBox.y - 18, imageBox.w + 36, imageBox.h + 36, 42);
-  ctx.fillStyle = "rgba(255,255,255,0.12)";
+  const imageBox = { x: 92, y: 374, w: 896, h: 728 };
+  roundRect(ctx, imageBox.x - 20, imageBox.y - 20, imageBox.w + 40, imageBox.h + 40, 38);
+  ctx.fillStyle = "rgba(255,255,255,0.14)";
   ctx.fill();
-  drawImageCover(ctx, img, imageBox.x, imageBox.y, imageBox.w, imageBox.h, 34);
+  ctx.shadowColor = "rgba(255,59,212,0.65)";
+  ctx.shadowBlur = 28;
+  drawImageCover(ctx, img, imageBox.x, imageBox.y, imageBox.w, imageBox.h, 30);
+  ctx.shadowBlur = 0;
 
-  ctx.fillStyle = "rgba(0,0,0,0.62)";
-  roundRect(ctx, 72, height - 152, 360, 72, 36);
+  ctx.fillStyle = "rgba(0,0,0,0.7)";
+  roundRect(ctx, 72, height - 150, 360, 72, 8);
   ctx.fill();
   ctx.fillStyle = "#ffffff";
-  ctx.font = "800 30px Arial";
-  ctx.fillText("LOW POLY MBTI", 108, height - 106);
+  ctx.font = "900 30px Arial";
+  ctx.fillText("Y2K MBTI AVATAR", 104, height - 104);
 
   ctx.fillStyle = "rgba(255,255,255,0.78)";
   ctx.font = "700 26px Arial, sans-serif";
   ctx.textAlign = "right";
-  ctx.fillText(designer, width - 70, height - 70);
+  ctx.fillText(DESIGNER_CREDIT, width - 70, height - 70);
   ctx.textAlign = "left";
 }
 
@@ -275,11 +271,6 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.arcTo(x, y + h, x, y, r);
   ctx.arcTo(x, y, x + w, y, r);
   ctx.closePath();
-}
-
-function sanitizeCredit(value) {
-  const text = String(value || "设计人：王星").trim().slice(0, 18);
-  return text || "设计人：王星";
 }
 
 function setStatus(message, isError = false) {

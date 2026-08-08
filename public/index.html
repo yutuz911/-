@@ -3,63 +3,75 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MBTI Persona Portrait</title>
+    <title>MBTI卡通形象</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <main class="app-shell">
-      <section class="cover-hero" aria-label="cover preview">
+      <section class="cover-hero" aria-label="MBTI cartoon cover">
         <div class="hero-copy">
-          <span>PERSONA COVER</span>
-          <h1>MBTI Image2 主图生成</h1>
+          <span class="eyebrow">PERSONA / IMAGE2 / Y2K</span>
+          <h1>MBTI卡通形象</h1>
+          <p>上传本人照片，选择人格类型，生成一张年轻、潮流、带 MBTI 气质的个性化卡通头像和主图封面。</p>
+          <div class="type-strip" aria-label="MBTI types">
+            <span>INTJ</span><span>ENFP</span><span>INFJ</span><span>ESTP</span>
+            <span>ISFP</span><span>ENTJ</span><span>INFP</span><span>ESFJ</span>
+          </div>
         </div>
-        <div class="phone-wall" aria-hidden="true">
-          <div class="phone-card hot"><b>ENFP</b><span>设计人：王星</span></div>
-          <div class="phone-card pink"><b>INTJ</b><span>Persona Poster</span></div>
-          <div class="phone-card violet"><b>INFJ</b><span>Image2 Cover</span></div>
-          <div class="phone-card blue"><b>ESTP</b><span>Low Poly</span></div>
+
+        <div class="poster-stack" aria-hidden="true">
+          <div class="poster-card neon">
+            <span class="card-kicker">MBTI</span>
+            <b>ENFP</b>
+            <small>Spark Cartoon</small>
+          </div>
+          <div class="poster-card chrome">
+            <span class="card-kicker">AVATAR</span>
+            <b>INTJ</b>
+            <small>Strategic Architect</small>
+          </div>
+          <div class="poster-card pixel">
+            <span class="card-kicker">IMAGE2</span>
+            <b>INFJ</b>
+            <small>Persona Poster</small>
+          </div>
         </div>
       </section>
 
       <section class="workspace" aria-label="MBTI persona image generator">
         <div class="panel controls">
           <div class="brand">
-            <span class="mark" aria-hidden="true">M</span>
+            <span class="mark" aria-hidden="true">16</span>
             <div>
-              <h2>MBTI Persona Cover</h2>
-              <p>上传照片，选择人格，输出照片和封面。</p>
+              <h2>生成控制台</h2>
+              <p>照片、MBTI、风格、比例，一次生成头像和封面。</p>
             </div>
           </div>
 
           <form id="generator-form">
             <label class="field">
-              <span>照片</span>
+              <span>上传照片</span>
               <input id="photo" name="photo" type="file" accept="image/png,image/jpeg,image/webp" required />
             </label>
 
             <div class="grid-two">
               <label class="field">
-                <span>MBTI</span>
+                <span>MBTI 类型</span>
                 <select id="mbti" name="mbti" required></select>
               </label>
 
               <label class="field">
-                <span>比例</span>
+                <span>图片比例</span>
                 <select id="aspect-ratio" name="aspectRatio">
-                  <option value="1:1">1:1</option>
-                  <option value="2:3">2:3</option>
-                  <option value="3:2">3:2</option>
+                  <option value="1:1">1:1 头像</option>
+                  <option value="2:3">2:3 竖版封面</option>
+                  <option value="3:2">3:2 横版封面</option>
                 </select>
               </label>
             </div>
 
-            <label class="field">
-              <span>署名</span>
-              <input id="designer-name" name="designerName" type="text" value="设计人：王星" maxlength="18" />
-            </label>
-
             <fieldset class="field">
-              <legend>风格</legend>
+              <legend>视觉风格</legend>
               <div class="segments" role="radiogroup" aria-label="style">
                 <label><input type="radio" name="style" value="lowpoly" checked /> 潮流</label>
                 <label><input type="radio" name="style" value="storybook" /> 绘本</label>
@@ -86,8 +98,8 @@
             <img id="result-image" alt="生成结果" />
             <canvas id="poster-canvas" width="1080" height="1350"></canvas>
             <div id="empty-state">
-              <strong>等待生成</strong>
-              <span>结果会显示在这里</span>
+              <strong>MBTI CARTOON</strong>
+              <span>生成后的照片和封面会显示在这里</span>
             </div>
           </div>
 
@@ -104,6 +116,7 @@
         </div>
       </section>
     </main>
+    <footer class="designer-credit" aria-label="designer credit">设计人：王星</footer>
     <script src="/app.js"></script>
   </body>
 </html>
