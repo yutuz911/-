@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HealthOps 医学知识库</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="side-rail" aria-label="知识库导航">
+        <div class="brand-block">
+          <div class="brand-mark">H</div>
+          <div>
+            <p class="eyebrow">HealthOps KB</p>
+            <h1>医学知识库中枢</h1>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <a href="#universe" class="nav-item active">星体检索</a>
+          <a href="#ingest" class="nav-item">资料喂入</a>
+          <a href="#standards" class="nav-item">输出标准</a>
+          <a href="#tests" class="nav-item">幻觉测试</a>
+        </nav>
+
+        <section class="source-note">
+          <p class="section-kicker">数据原则</p>
+          <p>示例知识仅使用 WHO、CDC、国家卫健委、国家药监局等官方或权威入口。客户资料进入正式库前必须经过来源、证据、风险三重标注。</p>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">面向健康运营、医学内容质控、AI 问答安全</p>
+            <h2>把客户资料沉淀成可检索、可审核、可输出的专属知识库</h2>
+          </div>
+          <div class="topbar-actions">
+            <button id="resetDemo" class="icon-button" title="恢复官方示例库">↺</button>
+            <button id="exportJson" class="primary-action">导出 JSON</button>
+          </div>
+        </header>
+
+        <section class="metrics-grid" aria-label="知识库运行指标">
+          <article class="metric-card">
+            <span id="metricCount">0</span>
+            <p>知识对象</p>
+          </article>
+          <article class="metric-card">
+            <span id="metricRisk">0</span>
+            <p>高风险拦截项</p>
+          </article>
+          <article class="metric-card">
+            <span id="metricSources">0</span>
+            <p>来源类型</p>
+          </article>
+          <article class="metric-card">
+            <span id="metricTests">0</span>
+            <p>幻觉测试用例</p>
+          </article>
+        </section>
+
+        <section id="universe" class="universe-panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-kicker">Orbit Search</p>
+              <h2>症状与疾病流星图谱</h2>
+            </div>
+            <div class="search-wrap">
+              <input id="searchInput" type="search" placeholder="搜索：胸痛 / 高血压 / 糖尿病 / 用药" />
+              <button id="searchButton">检索</button>
+            </div>
+          </div>
+
+          <div class="universe-layout">
+            <div class="orbit-stage" aria-label="流星围绕星体的知识图谱">
+              <div class="starfield"></div>
+              <div class="planet">
+                <div class="planet-core">
+                  <span>KB</span>
+                  <small>Evidence Hub</small>
+                </div>
+              </div>
+              <div id="meteorLayer" class="meteor-layer"></div>
+            </div>
+
+            <article id="detailCard" class="detail-card">
+              <div class="detail-top">
+                <p class="section-kicker" id="detailType">疾病知识</p>
+                <div class="pill-row">
+                  <span id="detailEvidence" class="status-pill">证据 A</span>
+                  <span id="detailRisk" class="status-pill risk-low">低风险</span>
+                </div>
+              </div>
+              <h3 id="detailTitle">选择一颗流星查看知识对象</h3>
+              <p id="detailSummary" class="detail-summary">搜索相关病症后，匹配的流星会放大并呈现结构化介绍、风险边界和官方来源。</p>
+              <dl class="detail-list">
+                <div>
+                  <dt>常见表达</dt>
+                  <dd id="detailAliases">-</dd>
+                </div>
+                <div>
+                  <dt>关键提示</dt>
+                  <dd id="detailSignals">-</dd>
+                </div>
+                <div>
+                  <dt>输出边界</dt>
+                  <dd id="detailBoundary">不诊断、不处方、不替代医生。</dd>
+                </div>
+              </dl>
+              <div class="source-box">
+                <p>来源依据</p>
+                <ul id="detailSources"></ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="ingest" class="split-panel">
+          <article class="ingest-card">
+            <div class="panel-head compact">
+              <div>
+                <p class="section-kicker">Client Ingestion</p>
+                <h2>客户资料喂入</h2>
+              </div>
+              <span class="status-dot">本地保存</span>
+            </div>
+            <form id="knowledgeForm" class="knowledge-form">
+              <label>
+                标题
+                <input name="title" required placeholder="如：高血压生活方式管理" />
+              </label>
+              <label>
+                类型
+                <select name="type">
+                  <option>疾病知识</option>
+                  <option>症状分流</option>
+                  <option>药品知识</option>
+                  <option>检验检查</option>
+                  <option>营养生活方式</option>
+                  <option>合规话术</option>
+                </select>
+              </label>
+              <label>
+                常见表达
+                <input name="aliases" placeholder="用顿号或逗号分隔" />
+              </label>
+              <label>
+                结构化摘要
+                <textarea name="summary" rows="4" required placeholder="用通俗语言描述知识点，不做诊断或疗效承诺。"></textarea>
+              </label>
+              <label>
+                关键提示
+                <textarea name="signals" rows="3" placeholder="如：胸痛、出冷汗、呼吸困难需急诊评估"></textarea>
+              </label>
+              <div class="form-grid">
+                <label>
+                  证据等级
+                  <select name="evidence">
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                    <option>D</option>
+                    <option>E</option>
+                  </select>
+                </label>
+                <label>
+                  风险等级
+                  <select name="risk">
+                    <option>低</option>
+                    <option>中</option>
+                    <option>高</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                来源链接
+                <input name="sourceUrl" type="url" placeholder="https://..." />
+              </label>
+              <label>
+                输出边界
+                <input name="boundary" placeholder="如：不提供个体化用药调整建议" />
+              </label>
+              <button class="primary-action full" type="submit">沉淀为知识对象</button>
+            </form>
+          </article>
+
+          <article class="pipeline-card">
+            <p class="section-kicker">Knowledge Pipeline</p>
+            <h2>运行方案架构</h2>
+            <ol class="pipeline-list">
+              <li><span>01</span>客户上传资料、指南、说明书、FAQ 或运营内容</li>
+              <li><span>02</span>识别来源类型，打上权威性、时效性、适用场景标签</li>
+              <li><span>03</span>抽取疾病、症状、药品、检查、人群、禁用表达</li>
+              <li><span>04</span>按证据等级与风险等级进入复核队列</li>
+              <li><span>05</span>通过检索增强问答、内容审核、社群 SOP 输出</li>
+              <li><span>06</span>用幻觉测试集持续评估输出是否安全可靠</li>
+            </ol>
+            <div class="json-tools">
+              <textarea id="jsonInput" rows="7" placeholder='粘贴 JSON 数组导入，例如 [{"title":"...", "summary":"..."}]'></textarea>
+              <button id="importJson">导入客户 JSON</button>
+            </div>
+          </article>
+        </section>
+
+        <section id="standards" class="standards-panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-kicker">Output Standard</p>
+              <h2>健康内容输出标准</h2>
+            </div>
+          </div>
+          <div class="standard-grid">
+            <article>
+              <h3>标准回答结构</h3>
+              <p>结论先行 → 原因解释 → 行动建议 → 风险提醒 → 来源依据 → 边界声明。</p>
+            </article>
+            <article>
+              <h3>拒答边界</h3>
+              <p>不做诊断、不处方、不建议停药换药、不承诺疾病治疗效果，不编造指南或专家。</p>
+            </article>
+            <article>
+              <h3>合规替代表达</h3>
+              <p>用“健康科普、生活方式管理、营养支持场景、建议咨询专业人士”替代“根治、无副作用、人人适用”。</p>
+            </article>
+            <article>
+              <h3>特殊人群优先</h3>
+              <p>孕期、哺乳期、儿童、老人、慢病、肝肾功能异常、长期用药人群自动升级风险提示。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="tests" class="tests-panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-kicker">Hallucination Guard</p>
+              <h2>幻觉测试与输出质控</h2>
+            </div>
+            <button id="runTests" class="primary-action">运行测试</button>
+          </div>
+          <div class="test-grid" id="testGrid"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
