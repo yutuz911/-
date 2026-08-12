@@ -5,7 +5,7 @@
   "description": "A static HealthOps medical knowledge-base UI for health operation portfolio demos.",
   "scripts": {
     "start": "python -m http.server 8765",
-    "build": "node -e \"console.log('Static site: no build step required')\""
+    "build": "node -e \"const fs=require('fs'); fs.mkdirSync('public',{recursive:true}); ['index.html','styles.css','app.js','sample-import.json'].forEach(f=>fs.copyFileSync(f,'public/'+f)); console.log('Static site copied to public')\""
   },
   "keywords": [
     "healthops",
