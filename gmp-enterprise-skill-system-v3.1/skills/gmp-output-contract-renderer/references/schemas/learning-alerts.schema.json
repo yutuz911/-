@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex.skills/gmp-deviation-capa-assistant/learning-alerts.schema.json",
+  "title": "GMP Long-term Learning and Alerts",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "learning_update",
+    "similar_events",
+    "review_reminders",
+    "predictive_alerts",
+    "next_actions"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0"},
+    "learning_update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_date", "source_materials", "new_learning_points", "enterprise_preferences_added", "ledger_fragment"],
+      "properties": {
+        "data_date": {"type": ["string", "null"]},
+        "source_materials": {"type": "array", "items": {"type": "string"}},
+        "new_learning_points": {"type": "array", "items": {"type": "string"}},
+        "enterprise_preferences_added": {"type": "array", "items": {"type": "string"}},
+        "ledger_fragment": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["event_id", "event_type", "product_or_process", "root_cause_pattern", "capa_status", "review_due_date"],
+            "properties": {
+              "event_id": {"type": ["string", "null"]},
+              "event_type": {"type": "string"},
+              "product_or_process": {"type": ["string", "null"]},
+              "root_cause_pattern": {"type": ["string", "null"]},
+              "capa_status": {"enum": ["未启动", "执行中", "已完成", "待有效性确认", "已关闭", "未知"]},
+              "review_due_date": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "similar_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["current_event", "historical_event", "similarity_reason", "risk_note"],
+        "properties": {
+          "current_event": {"type": "string"},
+          "historical_event": {"type": ["string", "null"]},
+          "similarity_reason": {"type": "string"},
+          "risk_note": {"type": "string"}
+        }
+      }
+    },
+    "review_reminders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["object_id", "object_type", "trigger_reason", "suggested_review_materials", "owner_department", "due_time", "risk_level"],
+        "properties": {
+          "object_id": {"type": ["string", "null"]},
+          "object_type": {"enum": ["偏差", "CAPA", "审计缺陷", "变更", "OOS/OOT", "投诉", "其他"]},
+          "trigger_reason": {"type": "string"},
+          "suggested_review_materials": {"type": "array", "items": {"type": "string"}},
+          "owner_department": {"type": ["string", "null"]},
+          "due_time": {"type": ["string", "null"]},
+          "risk_level": {"enum": ["低", "中", "高", "待定"]}
+        }
+      }
+    },
+    "predictive_alerts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["prediction_object", "risk_signal", "possible_impact", "suggested_action", "priority", "confidence"],
+        "properties": {
+          "prediction_object": {"type": "string"},
+          "risk_signal": {"type": "string"},
+          "possible_impact": {"type": "string"},
+          "suggested_action": {"type": "string"},
+          "priority": {"enum": ["高", "中", "低"]},
+          "confidence": {"enum": ["高", "中", "低", "待确认"]}
+        }
+      }
+    },
+    "next_actions": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}

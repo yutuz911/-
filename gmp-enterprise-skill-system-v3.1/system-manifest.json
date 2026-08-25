@@ -1,0 +1,33 @@
+{
+  "system_name": "gmp-enterprise-skill-system",
+  "version": "3.1",
+  "architecture": "one-main-skill-plus-two-auxiliary-skills",
+  "main_skill": {
+    "name": "gmp-deviation-capa-assistant",
+    "role": "偏差调查与CAPA总控",
+    "path": "skills/gmp-deviation-capa-assistant"
+  },
+  "auxiliary_skills": [
+    {
+      "name": "gmp-knowledge-governor",
+      "role": "法规资讯源、训练材料、企业资料投喂、长期学习和预测提醒治理",
+      "path": "skills/gmp-knowledge-governor"
+    },
+    {
+      "name": "gmp-output-contract-renderer",
+      "role": "JSON Schema、稳定输出契约和HTML UI渲染",
+      "path": "skills/gmp-output-contract-renderer"
+    }
+  ],
+  "deliverables": [
+    "deliverables/GMP智能体训练材料清单_企业级完善版.xlsx",
+    "deliverables/交互式偏差调查报告示例_企业级新版.html",
+    "deliverables/企业GMP资料投递与长期学习入口_新版.html"
+  ],
+  "default_learning_behavior": "每次使用主Skill后，自动将脱敏摘要、偏差类型、根因模式、CAPA模式、复查节点和企业偏好写入gmp-knowledge-governor/references/long-term-learning-ledger.md；普通报告默认不解释两份表格来源。",
+  "source_spreadsheets": [
+    "C:/Users/wxdd666/Desktop/GMP资讯采集源(1).xlsx",
+    "C:/Users/wxdd666/Desktop/GMP智能体训练材料清单(1).xlsx"
+  ],
+  "compliance_boundary": "AI输出为偏差调查和CAPA建议草案，最终质量决策需企业QA或授权人员审核确认。"
+}
