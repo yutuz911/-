@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{REPORT_TITLE}}</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --surface-2: #eef4f2;
+      --surface-3: #f2f4f7;
+      --ink: #111827;
+      --muted: #5e6a78;
+      --line: #d8dee6;
+      --strong: #0d1f23;
+      --teal: #0f766e;
+      --teal-dark: #0b5f59;
+      --amber: #b45309;
+      --amber-bg: #fff7ed;
+      --red: #b91c1c;
+      --red-bg: #fff1f2;
+      --green: #15803d;
+      --green-bg: #ecfdf3;
+      --shadow: 0 18px 46px rgba(15, 31, 35, .08);
+      --radius: 8px;
+      --sidebar: 268px;
+    }
+    [data-theme="dark"] {
+      --bg: #0f1418;
+      --surface: #171d22;
+      --surface-2: #143331;
+      --surface-3: #20272d;
+      --ink: #edf2f4;
+      --muted: #a5b1bd;
+      --line: #2b353d;
+      --strong: #ffffff;
+      --amber-bg: #382715;
+      --red-bg: #3b181c;
+      --green-bg: #143423;
+      --shadow: 0 18px 46px rgba(0, 0, 0, .28);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      line-height: 1.58;
+      letter-spacing: 0;
+    }
+    button { font: inherit; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; min-height: 36px; padding: 7px 11px; cursor: pointer; }
+    button:hover { border-color: var(--teal); color: var(--teal-dark); }
+    .app { min-height: 100vh; display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); }
+    .side {
+      position: sticky; top: 0; height: 100vh; padding: 22px 18px;
+      border-right: 1px solid var(--line); background: var(--surface);
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .wordmark { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--strong); }
+    .mark { width: 32px; height: 32px; border-radius: 8px; background: var(--strong); color: #fff; display: grid; place-items: center; font-size: 14px; }
+    .report-id { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; background: var(--surface-3); }
+    .label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 3px; }
+    .value { display: block; color: var(--strong); font-weight: 700; word-break: break-word; }
+    .nav { display: grid; gap: 4px; }
+    .nav a { text-decoration: none; color: var(--muted); border-radius: 8px; padding: 9px 10px; border: 1px solid transparent; }
+    .nav a:hover, .nav a.active { color: var(--strong); background: var(--surface-2); border-color: var(--line); }
+    .side-foot { margin-top: auto; color: var(--muted); font-size: 12px; }
+    .main { min-width: 0; }
+    .command { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+    .command-inner { max-width: 1180px; margin: 0 auto; padding: 12px 22px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .command-title { display: flex; flex-direction: column; gap: 2px; }
+    .command-title strong { color: var(--strong); }
+    .command-title span { color: var(--muted); font-size: 13px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 24px 22px 64px; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); gap: 16px; align-items: stretch; margin-bottom: 16px; }
+    .hero-main, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .hero-main { padding: 26px; display: flex; flex-direction: column; justify-content: space-between; gap: 22px; min-height: 292px; }
+    .eyebrow { display: inline-flex; width: max-content; max-width: 100%; padding: 4px 9px; border-radius: 999px; background: var(--surface-2); color: var(--teal-dark); border: 1px solid var(--line); font-size: 12px; font-weight: 700; }
+    h1 { margin: 10px 0 12px; font-size: 34px; line-height: 1.16; letter-spacing: 0; color: var(--strong); max-width: 900px; }
+    .summary { max-width: 850px; margin: 0; color: var(--ink); font-size: 16px; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip, .status { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; border: 1px solid var(--line); background: var(--surface-3); color: var(--ink); font-size: 13px; font-weight: 700; width: max-content; max-width: 100%; }
+    .chip.risk-medium, .status.warn { background: var(--amber-bg); color: var(--amber); }
+    .status.good { background: var(--green-bg); color: var(--green); }
+    .status.danger { background: var(--red-bg); color: var(--red); }
+    .hero-side { display: grid; gap: 10px; }
+    .metric { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 15px; box-shadow: var(--shadow); }
+    .metric strong { display: block; margin-top: 3px; font-size: 18px; color: var(--strong); word-break: break-word; }
+    .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+    .panel { padding: 18px; min-width: 0; }
+    .span-4 { grid-column: span 4; } .span-5 { grid-column: span 5; } .span-6 { grid-column: span 6; } .span-7 { grid-column: span 7; } .span-8 { grid-column: span 8; } .span-12 { grid-column: span 12; }
+    .section { scroll-margin-top: 80px; margin-top: 16px; }
+    h2 { margin: 0 0 12px; font-size: 18px; line-height: 1.3; color: var(--strong); }
+    h3 { margin: 16px 0 8px; font-size: 15px; color: var(--strong); }
+    .muted { color: var(--muted); }
+    .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .fact { border: 1px solid var(--line); border-radius: var(--radius); padding: 11px; background: var(--surface-3); }
+    .timeline { display: grid; gap: 9px; }
+    .event { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 12px; border-left: 3px solid var(--teal); padding: 9px 11px; background: var(--surface-3); border-radius: 0 var(--radius) var(--radius) 0; }
+    .event time { color: var(--teal-dark); font-weight: 700; font-size: 13px; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; font-size: 14px; }
+    th, td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: var(--surface-2); color: var(--strong); font-weight: 800; }
+    tr:last-child td { border-bottom: 0; }
+    details { border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); padding: 12px 13px; margin: 10px 0; }
+    summary { cursor: pointer; color: var(--strong); font-weight: 800; }
+    details p, details ul { margin-bottom: 0; }
+    .filterbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .list { margin: 0; padding-left: 18px; }
+    .list li { margin: 6px 0; }
+    .notice { border-left: 4px solid var(--amber); background: var(--amber-bg); color: var(--ink); border-radius: 0 var(--radius) var(--radius) 0; padding: 13px 15px; }
+    .footer-note { margin-top: 16px; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; background: var(--surface-3); color: var(--muted); font-size: 13px; }
+    .toast { position: fixed; right: 18px; bottom: 18px; background: var(--strong); color: #fff; border-radius: 8px; padding: 10px 12px; box-shadow: var(--shadow); opacity: 0; transform: translateY(8px); pointer-events: none; transition: .18s ease; z-index: 40; font-size: 13px; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      .side { position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .side-foot { display: none; }
+      .nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .hero { grid-template-columns: 1fr; }
+      .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 { grid-column: span 12; }
+    }
+    @media (max-width: 620px) {
+      .command-inner, .wrap { padding-left: 14px; padding-right: 14px; }
+      .hero-main { padding: 18px; }
+      h1 { font-size: 26px; }
+      .facts { grid-template-columns: 1fr; }
+      .event { grid-template-columns: 1fr; }
+      .nav { grid-template-columns: 1fr 1fr; }
+    }
+    @media print {
+      body { background: #fff; }
+      .side, .command, .filterbar, .toast { display: none !important; }
+      .app { display: block; }
+      .wrap { max-width: none; padding: 0; }
+      .hero-main, .panel, .metric, .footer-note { box-shadow: none; break-inside: avoid; }
+      details { break-inside: avoid; }
+      details:not([open]) > *:not(summary) { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="side">
+      <div class="wordmark">
+        <div class="mark">QA</div>
+        <div>
+          <div>GMP偏差报告</div>
+          <span class="label">Deviation CAPA System</span>
+        </div>
+      </div>
+      <div class="report-id">
+        <span class="label">报告编号</span>
+        <span class="value">{{REPORT_NO}}</span>
+        <span class="label" style="margin-top:10px">当前状态</span>
+        <span class="status warn">{{BATCH_STATUS}}</span>
+      </div>
+      <nav class="nav" aria-label="报告导航">
+        <a class="active" href="#overview">概览</a>
+        <a href="#facts">事实</a>
+        <a href="#investigation">调查</a>
+        <a href="#root-cause">根因</a>
+        <a href="#impact">影响评估</a>
+        <a href="#capa">CAPA</a>
+        <a href="#qa">QA审核</a>
+      </nav>
+      <div class="side-foot">基于结构化JSON生成。最终结论需企业QA或授权人员审核。</div>
+    </aside>
+    <main class="main">
+      <div class="command">
+        <div class="command-inner">
+          <div class="command-title">
+            <strong>{{PRODUCT_NAME}} / {{BATCH_NO}}</strong>
+            <span>{{PROCESS_STEP}} · {{DEVIATION_TYPE}}</span>
+          </div>
+          <div class="actions">
+            <button type="button" onclick="copySummary()">复制摘要</button>
+            <button type="button" onclick="toggleAll(true)">展开全部</button>
+            <button type="button" onclick="toggleAll(false)">折叠全部</button>
+            <button type="button" onclick="toggleTheme()">深浅切换</button>
+            <button type="button" onclick="window.print()">打印/PDF</button>
+          </div>
+        </div>
+      </div>
+      <div class="wrap">
+        <section class="hero" id="overview">
+          <div class="hero-main">
+            <div>
+              <span class="eyebrow">{{RISK_LEVEL}}风险建议</span>
+              <h1>{{REPORT_TITLE}}</h1>
+              <p class="summary" id="summaryText">{{MANAGEMENT_SUMMARY}}</p>
+            </div>
+            <div class="chips">
+              <span class="chip risk-medium">{{RISK_LEVEL}}</span>
+              <span class="chip">{{DEVIATION_TYPE}}</span>
+              <span class="chip">{{EVIDENCE_LEVEL}}</span>
+              <span class="chip">{{BATCH_STATUS}}</span>
+            </div>
+          </div>
+          <div class="hero-side">
+            <div class="metric"><span class="label">产品</span><strong>{{PRODUCT_NAME}}</strong></div>
+            <div class="metric"><span class="label">批号</span><strong>{{BATCH_NO}}</strong></div>
+            <div class="metric"><span class="label">发生工序</span><strong>{{PROCESS_STEP}}</strong></div>
+            <div class="metric"><span class="label">证据充分度</span><strong>{{EVIDENCE_LEVEL}}</strong></div>
+          </div>
+        </section>
+        <section class="grid section" id="facts">
+          <div class="panel span-7">
+            <h2>偏差事实</h2>
+            <div class="facts">{{FACT_CARDS}}</div>
+          </div>
+          <div class="panel span-5">
+            <h2>事件时间线</h2>
+            <div class="timeline">{{TIMELINE}}</div>
+          </div>
+        </section>
+        <section class="grid section">
+          <div class="panel span-8">
+            <h2>风险快照</h2>
+            {{RISK_SNAPSHOT}}
+          </div>
+          <div class="panel span-4">
+            <h2>当前建议</h2>
+            {{CURRENT_RECOMMENDATION}}
+          </div>
+        </section>
+        <section class="panel section" id="investigation">
+          <h2>调查范围与证据清单</h2>
+          {{INVESTIGATION_TABLE}}
+        </section>
+        <section class="grid section" id="root-cause">
+          <div class="panel span-6">
+            <h2>5Why分析</h2>
+            {{FIVE_WHY_TABLE}}
+          </div>
+          <div class="panel span-6">
+            <h2>人机料法环测分析</h2>
+            {{ISHIKAWA_TABLE}}
+          </div>
+        </section>
+        <section class="panel section" id="impact">
+          <h2>产品质量影响评估</h2>
+          {{IMPACT_ASSESSMENT}}
+        </section>
+        <section class="panel section" id="capa">
+          <h2>CAPA计划</h2>
+          <div class="filterbar">
+            <button type="button" onclick="filterCapa('all')">全部</button>
+            <button type="button" onclick="filterCapa('纠正措施')">纠正措施</button>
+            <button type="button" onclick="filterCapa('预防措施')">预防措施</button>
+          </div>
+          {{CAPA_TABLE}}
+        </section>
+        <section class="grid section" id="qa">
+          <div class="panel span-6">
+            <h2>需补充确认事项</h2>
+            {{CONFIRMATION_LIST}}
+          </div>
+          <div class="panel span-6">
+            <h2>QA审核关注点</h2>
+            {{QA_LIST}}
+          </div>
+        </section>
+        <section class="section notice">{{COMPLIANCE_STATEMENT}}</section>
+        <div class="footer-note">本页面由GMP输出契约与报告渲染辅助技能生成，展示层不改变偏差调查事实、风险建议、质量影响评估或CAPA结论。</div>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast">已复制</div>
+  <script>
+    function toast(text) {
+      var el = document.getElementById("toast");
+      el.textContent = text;
+      el.classList.add("show");
+      window.setTimeout(function () { el.classList.remove("show"); }, 1500);
+    }
+    function copySummary() {
+      var text = document.getElementById("summaryText").innerText;
+      navigator.clipboard.writeText(text).then(function () { toast("管理层摘要已复制"); }, function () { toast("浏览器未允许复制"); });
+    }
+    function toggleAll(open) {
+      document.querySelectorAll("details").forEach(function (item) { item.open = open; });
+    }
+    function toggleTheme() {
+      var root = document.documentElement;
+      var next = root.getAttribute("data-theme") === "dark" ? "" : "dark";
+      if (next) root.setAttribute("data-theme", next);
+      else root.removeAttribute("data-theme");
+    }
+    function filterCapa(type) {
+      document.querySelectorAll("[data-capa-type]").forEach(function (row) {
+        row.style.display = type === "all" || row.dataset.capaType === type ? "" : "none";
+      });
+    }
+    var links = Array.prototype.slice.call(document.querySelectorAll(".nav a"));
+    var sections = links.map(function (link) { return document.querySelector(link.getAttribute("href")); }).filter(Boolean);
+    window.addEventListener("scroll", function () {
+      var current = sections[0];
+      sections.forEach(function (section) { if (section.getBoundingClientRect().top < 140) current = section; });
+      links.forEach(function (link) { link.classList.toggle("active", link.getAttribute("href") === "#" + current.id); });
+    }, { passive: true });
+  </script>
+</body>
+</html>

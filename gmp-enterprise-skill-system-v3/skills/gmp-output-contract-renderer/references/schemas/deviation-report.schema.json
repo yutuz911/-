@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex.skills/gmp-deviation-capa-assistant/deviation-report.schema.json",
+  "title": "GMP Deviation Investigation Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_metadata",
+    "input_facts",
+    "risk_assessment",
+    "investigation_plan",
+    "root_cause_analysis",
+    "quality_impact_assessment",
+    "capa_plan",
+    "information_gaps",
+    "qa_review_points",
+    "compliance_statement"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "report_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["report_title", "product_name", "batch_no", "process_step", "deviation_type", "current_batch_status"],
+      "properties": {
+        "report_title": {"type": "string"},
+        "report_no": {"type": ["string", "null"]},
+        "product_name": {"type": ["string", "null"]},
+        "batch_no": {"type": ["string", "null"]},
+        "process_step": {"type": ["string", "null"]},
+        "deviation_type": {"type": "string"},
+        "occurred_at": {"type": ["string", "null"]},
+        "discovered_at": {"type": ["string", "null"]},
+        "current_batch_status": {"type": "string"},
+        "prepared_for": {"type": ["string", "null"]}
+      }
+    },
+    "input_facts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidence_statement"}
+    },
+    "temporary_controls": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/action_item"},
+      "default": []
+    },
+    "external_references": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/reference_item"},
+      "default": []
+    },
+    "enterprise_rules": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/reference_item"},
+      "default": []
+    },
+    "risk_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["suggested_level", "rationale", "risk_drivers", "escalation_required"],
+      "properties": {
+        "suggested_level": {"enum": ["低", "中", "高", "待定"]},
+        "rationale": {"type": "string"},
+        "risk_drivers": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "escalation_required": {"type": "boolean"},
+        "evidence_sufficiency": {"enum": ["充分", "部分充分", "不足", "待定"]}
+      }
+    },
+    "investigation_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension", "check_item", "purpose", "owner_department", "expected_evidence", "status"],
+        "properties": {
+          "dimension": {"enum": ["人", "机", "料", "法", "环", "测", "管理", "历史趋势", "其他"]},
+          "check_item": {"type": "string"},
+          "purpose": {"type": "string"},
+          "owner_department": {"type": ["string", "null"]},
+          "expected_evidence": {"type": "string"},
+          "status": {"enum": ["待核查", "核查中", "已完成", "不适用"]}
+        }
+      }
+    },
+    "root_cause_analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["five_why", "fishbone", "direct_cause", "root_cause", "excluded_causes", "pending_causes"],
+      "properties": {
+        "five_why": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["level", "question", "answer", "basis_type"],
+            "properties": {
+              "level": {"type": "integer", "minimum": 1, "maximum": 5},
+              "question": {"type": "string"},
+              "answer": {"type": "string"},
+              "basis_type": {"$ref": "#/$defs/basis_type"}
+            }
+          }
+        },
+        "fishbone": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["dimension", "finding", "basis_type", "status"],
+            "properties": {
+              "dimension": {"enum": ["人", "机", "料", "法", "环", "测", "管理", "历史趋势", "其他"]},
+              "finding": {"type": "string"},
+              "basis_type": {"$ref": "#/$defs/basis_type"},
+              "status": {"enum": ["支持", "待确认", "已排除", "不适用"]}
+            }
+          }
+        },
+        "direct_cause": {"type": ["string", "null"]},
+        "root_cause": {"type": ["string", "null"]},
+        "excluded_causes": {"type": "array", "items": {"type": "string"}},
+        "pending_causes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "quality_impact_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "cqa_impact", "batch_disposition_recommendation", "supporting_evidence", "pending_evidence"],
+      "properties": {
+        "scope": {"type": "array", "items": {"type": "string"}},
+        "cqa_impact": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["quality_attribute", "impact_judgement", "basis"],
+            "properties": {
+              "quality_attribute": {"type": "string"},
+              "impact_judgement": {"enum": ["未见直接不利影响", "可能影响", "已影响", "待确认", "不适用"]},
+              "basis": {"type": "string"}
+            }
+          }
+        },
+        "batch_disposition_recommendation": {"type": "string"},
+        "supporting_evidence": {"type": "array", "items": {"type": "string"}},
+        "pending_evidence": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "capa_plan": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/action_item"}
+    },
+    "information_gaps": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "qa_review_points": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "compliance_statement": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "basis_type": {
+      "enum": ["user_fact", "enterprise_rule", "external_reference", "historical_data", "ai_inference", "unknown"]
+    },
+    "evidence_statement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fact", "basis_type", "source"],
+      "properties": {
+        "fact": {"type": "string"},
+        "basis_type": {"$ref": "#/$defs/basis_type"},
+        "source": {"type": ["string", "null"]},
+        "confidence": {"enum": ["高", "中", "低", "待确认"]}
+      }
+    },
+    "reference_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "source", "basis_type"],
+      "properties": {
+        "title": {"type": "string"},
+        "source": {"type": ["string", "null"]},
+        "version_or_date": {"type": ["string", "null"]},
+        "basis_type": {"$ref": "#/$defs/basis_type"},
+        "applicability_note": {"type": ["string", "null"]}
+      }
+    },
+    "action_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "action", "owner_department", "due_time", "output_evidence", "effectiveness_check", "status"],
+      "properties": {
+        "type": {"enum": ["临时控制", "纠正措施", "预防措施"]},
+        "action": {"type": "string"},
+        "owner_department": {"type": ["string", "null"]},
+        "due_time": {"type": ["string", "null"]},
+        "output_evidence": {"type": "string"},
+        "effectiveness_check": {"type": ["string", "null"]},
+        "status": {"enum": ["建议", "待执行", "执行中", "已完成", "待QA确认"]}
+      }
+    }
+  }
+}

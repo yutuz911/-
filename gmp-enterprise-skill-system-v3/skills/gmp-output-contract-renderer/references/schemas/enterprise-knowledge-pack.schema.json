@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex.skills/gmp-deviation-capa-assistant/enterprise-knowledge-pack.schema.json",
+  "title": "Enterprise GMP Knowledge Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "enterprise_profile",
+    "received_materials",
+    "extracted_rules",
+    "report_preferences",
+    "responsibility_matrix",
+    "risk_preferences",
+    "material_gaps",
+    "review_required"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0"},
+    "enterprise_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enterprise_name", "sites", "dosage_forms", "product_lines", "critical_systems"],
+      "properties": {
+        "enterprise_name": {"type": ["string", "null"]},
+        "sites": {"type": "array", "items": {"type": "string"}},
+        "dosage_forms": {"type": "array", "items": {"type": "string"}},
+        "product_lines": {"type": "array", "items": {"type": "string"}},
+        "critical_systems": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "received_materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["material_id", "material_name", "material_type", "source", "version_or_date", "confidentiality_level", "status"],
+        "properties": {
+          "material_id": {"type": "string"},
+          "material_name": {"type": "string"},
+          "material_type": {"type": "string"},
+          "source": {"type": ["string", "null"]},
+          "version_or_date": {"type": ["string", "null"]},
+          "confidentiality_level": {"enum": ["公开", "内部", "机密", "需脱敏", "未知"]},
+          "status": {"enum": ["已接收", "已结构化", "待复核", "不适用", "需补充"]}
+        }
+      }
+    },
+    "extracted_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_area", "rule_summary", "source_material", "confidence", "human_review_note"],
+        "properties": {
+          "rule_area": {"enum": ["偏差分级", "CAPA", "OOS/OOT", "变更", "验证", "放行", "数据完整性", "审计", "其他"]},
+          "rule_summary": {"type": "string"},
+          "source_material": {"type": ["string", "null"]},
+          "confidence": {"enum": ["高", "中", "低", "待确认"]},
+          "human_review_note": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "report_preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["risk_level_names", "title_pattern", "required_sections", "preferred_terms", "forbidden_phrases"],
+      "properties": {
+        "risk_level_names": {"type": "array", "items": {"type": "string"}},
+        "title_pattern": {"type": ["string", "null"]},
+        "required_sections": {"type": "array", "items": {"type": "string"}},
+        "preferred_terms": {"type": "array", "items": {"type": "string"}},
+        "forbidden_phrases": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "responsibility_matrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scenario", "production", "qa", "qc", "engineering", "warehouse", "other"],
+        "properties": {
+          "scenario": {"type": "string"},
+          "production": {"type": ["string", "null"]},
+          "qa": {"type": ["string", "null"]},
+          "qc": {"type": ["string", "null"]},
+          "engineering": {"type": ["string", "null"]},
+          "warehouse": {"type": ["string", "null"]},
+          "other": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "risk_preferences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["trigger", "required_action", "approval_role"],
+        "properties": {
+          "trigger": {"type": "string"},
+          "required_action": {"type": "string"},
+          "approval_role": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "material_gaps": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "review_required": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}
